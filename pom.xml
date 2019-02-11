@@ -7,7 +7,7 @@
     <groupId>ru.ifmo.wst</groupId>
     <artifactId>lab</artifactId>
     <packaging>pom</packaging>
-    <version>4.0</version>
+    <version>5.0</version>
 
 
     <properties>
