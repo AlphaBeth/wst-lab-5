@@ -23,7 +23,6 @@
         <module>data-access</module>
         <module>exterminatus-service</module>
         <module>utils</module>
-        <module>deployable-jaxrs</module>
     </modules>
 
     <build>
