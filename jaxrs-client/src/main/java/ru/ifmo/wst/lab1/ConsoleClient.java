@@ -2,7 +2,7 @@ package ru.ifmo.wst.lab1;
 
 import lombok.SneakyThrows;
 import ru.ifmo.wst.lab.Box;
-import ru.ifmo.wst.lab.ExterminatusPaths;
+import ru.ifmo.wst.lab.ExterminatusInfo;
 import ru.ifmo.wst.lab.Pair;
 import ru.ifmo.wst.lab1.command.Command;
 import ru.ifmo.wst.lab1.command.CommandArg;
@@ -55,6 +55,30 @@ public class ConsoleClient {
                         toNull(new DateArg<>("date", "Date of exterminatus", Filter::setDate))
                 ),
                 Filter::new);
+        Command<ExterminatusInfo> createCommand = new Command<>("create",
+                "Create new exterminatus entity",
+                asList(
+                        toNull(new StringArg<>("initiator", "Initiator name", ExterminatusInfo::setInitiator)),
+                        toNull(new StringArg<>("reason", "Reason of exterminatus", ExterminatusInfo::setReason)),
+                        toNull(new StringArg<>("method", "Method of exterminatus", ExterminatusInfo::setMethod)),
+                        toNull(new StringArg<>("planet", "Exterminated planet", ExterminatusInfo::setPlanet)),
+                        toNull(new DateArg<>("date", "Date of exterminatus", ExterminatusInfo::setDate))
+                ), ExterminatusInfo::new);
+        Command<ExterminatusEntity> updateCommand = new Command<>("update",
+                "Update exterminatus by id",
+                asList(
+                        new LongArg<>("id", "Exterminatus id", ExterminatusEntity::setId),
+                        toNull(new StringArg<>("initiator", "Initiator name", ExterminatusEntity::setInitiator)),
+                        toNull(new StringArg<>("reason", "Reason of exterminatus", ExterminatusEntity::setReason)),
+                        toNull(new StringArg<>("method", "Method of exterminatus", ExterminatusEntity::setMethod)),
+                        toNull(new StringArg<>("planet", "Exterminated planet", ExterminatusEntity::setPlanet)),
+                        toNull(new DateArg<>("date", "Date of exterminatus", ExterminatusEntity::setDate))
+                ), ExterminatusEntity::new
+        );
+        Command<Box<Long>> deleteCommand = new Command<>("delete", "Delete exterminatus by id",
+                asList(
+                        new LongArg<>("id", "Exterminatus id", Box::setValue)
+                ), Box::new);
         Command<Void> exitCommand = new Command<>("exit", "Exit application");
 
 
@@ -62,7 +86,7 @@ public class ConsoleClient {
                 System.out::print,
                 asList(
                         infoCommand, changeEndpointAddressCommand, findAllCommand, filterCommand,
-                        exitCommand
+                        createCommand, updateCommand, deleteCommand, exitCommand
                 ),
                 "No command found",
                 "Enter command", "> ");
@@ -99,6 +123,18 @@ public class ConsoleClient {
                     Box<String> arg = (Box<String>) withArg.getRight();
                     String newUrl = arg.getValue();
                     service = new ExterminatusResourceClient(newUrl);
+                } else if (command.equals(createCommand)) {
+                    ExterminatusInfo arg = (ExterminatusInfo) withArg.getRight();
+                    long id = service.create(arg);
+                    System.out.printf("Exterminatus with id %d was created\n", id);
+                } else if (command.equals(deleteCommand)) {
+                    @SuppressWarnings("unchecked")
+                    Box<Long> arg = (Box<Long>) withArg.getRight();
+                    Long deleteId = arg.getValue();
+                    int deletedCount = service.delete(deleteId);
+                    System.out.printf("%d rows were deleted by id %d\n", deletedCount, deleteId);
+                } else if (command.equals(updateCommand)) {
+                    System.out.println("Not implemented yet");
                 }
             } catch (Exception exc) {
                 System.out.println("Unknown error");
