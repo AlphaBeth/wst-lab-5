@@ -58,6 +58,19 @@ public class ExterminatusResourceClient {
         return Long.parseLong(body);
     }
 
+    public int update(ExterminatusEntity ee) {
+        ExterminatusInfo info = fromEntity(ee);
+        String updateResponse = rootResource.path(String.valueOf(ee.getId()))
+                .entity(info, MediaType.APPLICATION_JSON_TYPE)
+                .accept(MediaType.TEXT_PLAIN_TYPE)
+                .post(String.class);
+        return Integer.parseInt(updateResponse);
+    }
+
+    private ExterminatusInfo fromEntity(ExterminatusEntity ee) {
+        return new ExterminatusInfo(ee.getInitiator(), ee.getReason(), ee.getMethod(), ee.getPlanet(), ee.getDate());
+    }
+
     private String url(String endpointAddress) {
         return baseUrl + endpointAddress;
     }

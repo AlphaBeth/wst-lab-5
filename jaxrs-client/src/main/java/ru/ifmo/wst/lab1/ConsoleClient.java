@@ -134,7 +134,9 @@ public class ConsoleClient {
                     int deletedCount = service.delete(deleteId);
                     System.out.printf("%d rows were deleted by id %d\n", deletedCount, deleteId);
                 } else if (command.equals(updateCommand)) {
-                    System.out.println("Not implemented yet");
+                    ExterminatusEntity arg = (ExterminatusEntity) withArg.getRight();
+                    int updatedCount = service.update(arg);
+                    System.out.printf("%d rows updated by id %d\n", updatedCount, arg.getId());
                 }
             } catch (Exception exc) {
                 System.out.println("Unknown error");
