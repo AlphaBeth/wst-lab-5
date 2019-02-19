@@ -6,7 +6,7 @@ Standalone version of service - no application server is required, just build an
 
 `mvn clean package`
 
-`java -jar target/standalone-jaxws-VERSION-jar-with-dependencies.jar`
+`java -jar target/standalone-jaxrs-VERSION-executable.jar`
 
 ## Configuration
 
